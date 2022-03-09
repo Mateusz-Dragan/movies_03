@@ -8,9 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.pwsztar.domain.dto.CreateMovieDto;
-import pl.edu.pwsztar.domain.dto.DetailsMovieDto;
-import pl.edu.pwsztar.domain.dto.MovieDto;
+import pl.edu.pwsztar.domain.dto.*;
 import pl.edu.pwsztar.service.MovieService;
 
 import java.util.List;
@@ -62,6 +60,22 @@ public class MovieApiController {
         DetailsMovieDto detailsMovieDto = movieService.findMovie(movieId);
 
         return new ResponseEntity<>(detailsMovieDto, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/movies/counter", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<MovieCountDto> countAllMovies() {
+        MovieCountDto movieCountDto = movieService.countMovies();
+
+        return new ResponseEntity<>(movieCountDto, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @PutMapping(value = "/movies/{movieId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<MovieCountDto> editMovie(@PathVariable Long movieId, @RequestBody EditMovieDto editMovieDto) {
+        movieService.editMovie(movieId,editMovieDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

@@ -3,6 +3,24 @@ package pl.edu.pwsztar.domain.dto;
 public class DetailsMovieDto {
     private String title;
     private String videoId;
+    private String image;
+    private Integer year;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
     public DetailsMovieDto() {
     }

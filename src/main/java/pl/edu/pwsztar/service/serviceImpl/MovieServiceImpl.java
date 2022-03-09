@@ -4,10 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.edu.pwsztar.domain.dto.CreateMovieDto;
-import pl.edu.pwsztar.domain.dto.DetailsMovieDto;
-import pl.edu.pwsztar.domain.dto.MovieDto;
+import pl.edu.pwsztar.domain.dto.*;
 import pl.edu.pwsztar.domain.entity.Movie;
+import pl.edu.pwsztar.domain.mapper.MovieCountMapper;
 import pl.edu.pwsztar.domain.mapper.MovieDetailsMapper;
 import pl.edu.pwsztar.domain.mapper.MovieListMapper;
 import pl.edu.pwsztar.domain.mapper.MovieMapper;
@@ -25,17 +24,19 @@ public class MovieServiceImpl implements MovieService {
     private final MovieListMapper movieListMapper;
     private final MovieMapper movieMapper;
     private final MovieDetailsMapper movieDetailsMapper;
+    private final MovieCountMapper movieCountMapper;
 
     @Autowired
     public MovieServiceImpl(MovieRepository movieRepository,
                             MovieListMapper movieListMapper,
                             MovieMapper movieMapper,
-                            MovieDetailsMapper movieDetailsMapper) {
+                            MovieDetailsMapper movieDetailsMapper, MovieCountMapper movieCountMapper) {
 
         this.movieRepository = movieRepository;
         this.movieListMapper = movieListMapper;
         this.movieMapper = movieMapper;
         this.movieDetailsMapper = movieDetailsMapper;
+        this.movieCountMapper = movieCountMapper;
     }
 
     @Override
@@ -64,6 +65,24 @@ public class MovieServiceImpl implements MovieService {
         }
 
         return movieDetailsMapper.mapToDto(movie);
+    }
+
+    @Override
+    public MovieCountDto countMovies() {
+        Long counter = movieRepository.count();
+        return movieCountMapper.mapToDto(counter);
+    }
+
+    @Override
+    public EditMovieDto editMovie(Long movieId, EditMovieDto editMovieDto) {
+        Movie movie = movieRepository.findOneByMovieId(movieId);
+        movie.setVideoId(editMovieDto.getVideoId());
+        movie.setTitle(editMovieDto.getTitle());
+        movie.setYear(editMovieDto.getYear());
+        movie.setImage(editMovieDto.getImage());
+
+        movieRepository.save(movie);
+        return editMovieDto;
     }
 
 }
